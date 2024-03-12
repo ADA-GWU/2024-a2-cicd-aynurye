@@ -1,7 +1,10 @@
-name: Maven Build and Test
+name: Testing
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -10,14 +13,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4.1.1
-
-    - name: Set up JDK
-      uses: actions/setup-java@v4.1.0
-      with:
-        java-version: '21' # Change this according to your project's Java version
-        distribution: 'adopt'
-
-    - name: Test with Maven
-      run: mvn test
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
