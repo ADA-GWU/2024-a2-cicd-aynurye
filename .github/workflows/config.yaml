@@ -17,6 +17,7 @@ jobs:
       uses: actions/setup-java@v4.1.0
       with:
         java-version: '21' # Change this according to your project's Java version
+        distribution: 'adopt'
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
