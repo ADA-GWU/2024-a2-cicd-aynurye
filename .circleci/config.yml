@@ -1,0 +1,34 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: cimg/openjdk:15.0
+
+    working_directory: ~/webtest
+
+    steps:
+      - checkout # git pull
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - jpademo-{{ checksum "pom.xml" }}
+
+      - run: mvn dependency:go-offline
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: webtest-{{ checksum "pom.xml" }}
+
+      # package into a jar
+      - run: mvn clean package -Dtest=\!WebInterfaceTests
+
+      # build and push docker image to docker hub
+      - run: mvn clean compile jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_PASS -Dimage=jhasanov/webtest:$CIRCLE_BUILD_NUM
+
+      # store raw contents of src code
+      - store_artifacts:
+          path: target/classes
+          destination: webtest
