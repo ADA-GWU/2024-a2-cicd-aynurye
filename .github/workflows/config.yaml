@@ -1,0 +1,25 @@
+name: Maven Build and Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21' # Change this according to your project's Java version
+
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    - name: Test with Maven
+      run: mvn test --file pom.xml
